@@ -9,6 +9,7 @@ import {
   validateSync,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import { DomainError } from '@lib/errors';
 
 export class PostAgregate extends PostServices implements IPost {
   @IsUUID()
@@ -50,7 +51,7 @@ export class PostAgregate extends PostServices implements IPost {
     });
 
     if (errors.length > 0) {
-      throw new Error('Post is not valid');
+      throw new DomainError(errors, 'Post is not valid');
     }
 
     return _post;
