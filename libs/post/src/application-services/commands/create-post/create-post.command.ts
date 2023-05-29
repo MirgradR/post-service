@@ -1,5 +1,5 @@
 import { CreatePostDto } from '../dto';
 
 export class CreatePostCommand {
-  constructor(public readonly post: CreatePostDto);
+  constructor(public readonly post: CreatePostDto) {}
 }
