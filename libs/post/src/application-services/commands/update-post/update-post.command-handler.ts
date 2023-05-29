@@ -1,0 +1,32 @@
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UpdatePostCommand } from './update-post.command';
+import { PostAgregate } from '@lib/post/domain';
+import { PostRepository } from '@lib/post/providers';
+import { BadRequestException, Logger } from '@nestjs/common';
+
+@CommandHandler(UpdatePostCommand)
+export class UpdatePostCommandHandler
+  implements ICommandHandler<UpdatePostCommand, PostAgregate>
+{
+  private readonly logger = new Logger(UpdatePostCommandHandler.name);
+  constructor(private readonly postRepository: PostRepository) {}
+  async execute({ post }: UpdatePostCommand): Promise<PostAgregate> {
+    const existPost = await this.postRepository
+      .findOne(post.id)
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
+
+    if (!existPost) {
+      throw new BadRequestException(`Post by id ${post.id} not found`);
+    }
+
+    Object.assign(existPost, post);
+
+    const postAgregate = PostAgregate.create(existPost);
+    await this.postRepository.save(postAgregate);
+
+    return postAgregate;
+  }
+}
