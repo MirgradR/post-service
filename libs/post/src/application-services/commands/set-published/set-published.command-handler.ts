@@ -2,15 +2,15 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { SetPublishedCommand } from './set-published.command';
 import { BadRequestException, Logger } from '@nestjs/common';
 import { PostRepository } from '@lib/post/providers';
-import { PostAgregate } from '@lib/post/domain';
+import { PostAggregate } from '@lib/post/domain';
 
 @CommandHandler(SetPublishedCommand)
 export class SetPublishedCommandHandler
-  implements ICommandHandler<SetPublishedCommand, PostAgregate>
+  implements ICommandHandler<SetPublishedCommand, PostAggregate>
 {
   private readonly logger = new Logger(SetPublishedCommandHandler.name);
   constructor(private readonly postRepository: PostRepository) {}
-  async execute({ id }: SetPublishedCommand): Promise<PostAgregate> {
+  async execute({ id }: SetPublishedCommand): Promise<PostAggregate> {
     const existPost = await this.postRepository.findOne(id).catch((err) => {
       this.logger.error(err);
       return null;
@@ -20,7 +20,7 @@ export class SetPublishedCommandHandler
       throw new BadRequestException(`Post by id ${id} not found`);
     }
 
-    const postAgregate = PostAgregate.create(existPost);
+    const postAgregate = PostAggregate.create(existPost);
 
     postAgregate.setPublished();
 

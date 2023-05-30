@@ -1,12 +1,12 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { PostAgregate } from '@lib/post/domain';
+import { PostAggregate } from '@lib/post/domain';
 import { PostRepository } from '@lib/post/providers';
 import { Logger } from '@nestjs/common';
 import { GetPostsQuery } from './get-posts.query';
 
 @QueryHandler(GetPostsQuery)
 export class GetPostsQueryHandler
-  implements IQueryHandler<GetPostsQuery, [[PostAgregate], number]>
+  implements IQueryHandler<GetPostsQuery, [PostAggregate[], number]>
 {
   private readonly logger = new Logger(GetPostsQueryHandler.name);
 
@@ -14,7 +14,7 @@ export class GetPostsQueryHandler
 
   async execute({
     pagination,
-  }: GetPostsQuery): Promise<[[PostAgregate], number]> {
+  }: GetPostsQuery): Promise<[PostAggregate[], number]> {
     const [data, count] = await this.postRepository
       .findAll(pagination)
       .catch((err) => {
@@ -22,6 +22,6 @@ export class GetPostsQueryHandler
         return [[], 0];
       });
 
-    return [data, count] as [[PostAgregate], number];
+    return [data, count] as [PostAggregate[], number];
   }
 }

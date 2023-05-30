@@ -11,7 +11,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { DomainError } from '@lib/errors';
 
-export class PostAgregate extends PostServices implements IPost {
+export class PostAggregate extends PostServices implements IPost {
   @IsUUID()
   id: string = randomStringGenerator();
 
@@ -42,7 +42,7 @@ export class PostAgregate extends PostServices implements IPost {
   }
 
   static create(post: Partial<IPost>) {
-    const _post = new PostAgregate();
+    const _post = new PostAggregate();
     _post.setNotPublished();
     Object.assign(_post, post);
     _post.updatedAt = post?.id ? new Date().toISOString() : _post.updatedAt;
