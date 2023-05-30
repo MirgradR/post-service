@@ -5,10 +5,10 @@ import { Logger } from '@nestjs/common';
 import { GetPostsQuery } from './get-posts.query';
 
 @QueryHandler(GetPostsQuery)
-export class GetPostQueryHandler
+export class GetPostsQueryHandler
   implements IQueryHandler<GetPostsQuery, [[PostAgregate], number]>
 {
-  private readonly logger = new Logger(GetPostQueryHandler.name);
+  private readonly logger = new Logger(GetPostsQueryHandler.name);
 
   constructor(private readonly postRepository: PostRepository) {}
 
