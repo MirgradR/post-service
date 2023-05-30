@@ -12,11 +12,15 @@ export class GetPostQueryHandler
 
   constructor(private readonly postRepository: PostRepository) {}
 
-  async execute(query: GetPostsQuery): Promise<[[PostAgregate], number]> {
-    const [data, count] = await this.postRepository.findAll().catch((err) => {
-      this.logger.error(err);
-      return [[], 0];
-    });
+  async execute({
+    pagination,
+  }: GetPostsQuery): Promise<[[PostAgregate], number]> {
+    const [data, count] = await this.postRepository
+      .findAll(pagination)
+      .catch((err) => {
+        this.logger.error(err);
+        return [[], 0];
+      });
 
     return [data, count] as [[PostAgregate], number];
   }
